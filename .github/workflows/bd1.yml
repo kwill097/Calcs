@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drive Conversion Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+            color: #333;
+            font-size: 14px;
+        }
+        input, button {
+            display: block;
+            width: calc(100% - 20px); /* Adjust width taking padding into account */
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px; /* Spacing before the button */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output-label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none; /* Hide elements */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Belt Drive Calculation to Direct Drive Based on 1750 Motor</h2>
+        <label for="motorSheave">Motor/Driver Sheave Size:</label>
+        <input type="number" id="motorSheave" required>
+
+        <label for="reducerSheave">Reducer/Driven Sheave Size:</label>
+        <input type="number" id="reducerSheave" required>
+
+        <label for="existingReducerRatio">Existing Reducer Ratio:</label>
+        <input type="number" id="existingReducerRatio" required>
+
+        <button onclick="calculateDriveConversion()">Calculate Conversion</button>
+
+        <label class="output-label">Belt Reduction:</label>
+        <input type="text" id="beltReductionResult" readonly>
+
+        <label class="output-label">Input RPM at Reducer:</label>
+        <input type="text" id="inputRpmResult" readonly>
+
+        <label class="output-label">Overall Output RPM:</label>
+        <input type="text" id="outputRpmResult" readonly>
+
+        <!-- Hidden Overall Ratio for Direct Drive -->
+        <input type="text" id="overallRatioResult" class="hidden">
+
+        <label class="output-label">Overall Ratio for Direct Drive (1750/Overall Output RPM):</label>
+        <input type="text" id="finalDriveRatioResult" readonly>
+    </div>
+
+    <script>
+        function calculateDriveConversion() {
+            const motorRPM = 1750; // Given motor RPM for direct drive
+            const motorSheave = parseFloat(document.getElementById("motorSheave").value);
+            const reducerSheave = parseFloat(document.getElementById("reducerSheave").value);
+            const existingReducerRatio = parseFloat(document.getElementById("existingReducerRatio").value);
+
+            const beltReduction = motorSheave / reducerSheave;
+            const inputRpmAtReducer = motorRPM * beltReduction;
+            const overallOutputRpm = inputRpmAtReducer / existingReducerRatio;
+            const overallRatio = beltReduction * existingReducerRatio;
+            const finalDriveRatio = motorRPM / overallOutputRpm;
+
+            document.getElementById("beltReductionResult").value = beltReduction.toFixed(2);
+            document.getElementById("inputRpmResult").value = inputRpmAtReducer.toFixed(2);
+            document.getElementById("outputRpmResult").value = overallOutputRpm.toFixed(2);
+            document.getElementById("overallRatioResult").value = overallRatio.toFixed(2); // Still calculating but hidden
+            document.getElementById("finalDriveRatioResult").value = finalDriveRatio.toFixed(2);
+        }
+    </script>
+</body>
+</html>
